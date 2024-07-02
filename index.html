@@ -202,48 +202,27 @@
       }
     </style>
   </head>
+
   <body>
     <header><h1>短链生成器</h1></header>
 
     <main x-data="app" x-cloak>
-      <p
-        x-show.transition.opacity="alert"
-        :class="alert?.type"
-        x-text="alert?.message"
-      ></p>
+      <p x-show.transition.opacity="alert" :class="alert?.type" x-text="alert?.message" ></p>
 
       <input placeholder="输入要缩短的网址..." x-model="url" x-ref="url" />
-      <input
-        placeholder="请输入密码"
-        x-model="pwd"
-        x-ref="pwd"
-        type="password"
-      />
+      <input placeholder="请输入密码" x-model="pwd" type="password" style="margin-top: 1em;" />
 
       <details>
         <summary>自定义设置</summary>
+
         <div>
           <input placeholder="slug" x-model="slug" />
           <small>不设置则随机生成 slug</small>
         </div>
       </details>
 
-      <button
-        :class="{ loading }"
-        :disabled="loading || isValidated()"
-        @click="submit($refs, $nextTick)"
-      >
-        生成
-      </button>
+      <button :class="{ loading }" :disabled="loading || isValidated()" @click="submit($refs, $nextTick)" >生成</button>
     </main>
-
-    <footer>
-      基于
-      <a href="https://github.com/harrisonwang/linklet" target="_blank"
-        >Cloudflare</a
-      >
-      的短链生成器
-    </footer>
 
     <script src="asset/js/alpine.js"></script>
     <script>
@@ -264,7 +243,7 @@
             return;
           }
 
-          if (this.pwd && this.pwd.length > 6) {
+          if (!this.pwd || this.pwd.length < 6) {
             this.alert = { type: "error", message: "请输入6位以上的密码。" };
             return;
           }
