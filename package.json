@@ -16,10 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/x-dr/short.git"
   },
-  "keywords": [
-    "short",
-    "url"
-  ],
+  "keywords": ["short", "url"],
   "author": "x-dr",
   "license": "MIT",
   "bugs": {

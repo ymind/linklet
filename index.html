@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="asset/img/favicon.png"  >
+    <link rel="icon" href="asset/img/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>短链生成器</title>
     <style>
@@ -204,9 +204,22 @@
   </head>
   <body>
     <header><h1>短链生成器</h1></header>
+
     <main x-data="app" x-cloak>
-      <p x-show.transition.opacity="alert" :class="alert?.type" x-text="alert?.message"></p>
+      <p
+        x-show.transition.opacity="alert"
+        :class="alert?.type"
+        x-text="alert?.message"
+      ></p>
+
       <input placeholder="输入要缩短的网址..." x-model="url" x-ref="url" />
+      <input
+        placeholder="请输入密码"
+        x-model="pwd"
+        x-ref="pwd"
+        type="password"
+      />
+
       <details>
         <summary>自定义设置</summary>
         <div>
@@ -214,64 +227,90 @@
           <small>不设置则随机生成 slug</small>
         </div>
       </details>
-      <button :class="{ loading }" :disabled="loading || isValidated()" @click="submit($refs, $nextTick)">生成</button>
+
+      <button
+        :class="{ loading }"
+        :disabled="loading || isValidated()"
+        @click="submit($refs, $nextTick)"
+      >
+        生成
+      </button>
     </main>
+
     <footer>
-      基于 <a href="https://github.com/harrisonwang/linklet" target="_blank">Cloudflare</a> 的短链生成器
+      基于
+      <a href="https://github.com/harrisonwang/linklet" target="_blank"
+        >Cloudflare</a
+      >
+      的短链生成器
     </footer>
+
     <script src="asset/js/alpine.js"></script>
     <script>
       const app = {
-        url: '',
-        slug: '',
+        url: "",
+        slug: "",
+        pwd: "",
         alert: null,
         loading: false,
-        isValidated () {
-          return !/^https?:\/\/.{3,}/.test(this.url)
+
+        isValidated() {
+          return !/^https?:\/\/.{3,}/.test(this.url);
         },
-        submit ($refs, $nextTick) {
+
+        submit($refs, $nextTick) {
           if (!this.url) {
-            this.alert = { type: 'error', message: '缺少必需的参数：url。' }
-            return
+            this.alert = { type: "error", message: "缺少必需的参数：url。" };
+            return;
+          }
+
+          if (this.pwd && this.pwd.length > 6) {
+            this.alert = { type: "error", message: "请输入6位以上的密码。" };
+            return;
           }
 
           if (this.isValidated()) {
-            this.alert = { type: 'error', message: '非法格式：url。' }
-            return
+            this.alert = { type: "error", message: "非法格式：url。" };
+            return;
           }
 
-          this.alert = null
-          this.loading = true
+          this.alert = null;
+          this.loading = true;
 
-          const body = { url: this.url }
-          if (this.slug) body.slug = this.slug
+          const body = { url: this.url, pwd: this.pwd };
+          if (this.slug) body.slug = this.slug;
 
-          fetch('/create', {
-            method: 'post',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(body)
+          fetch("/create", {
+            method: "post",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(body),
           })
-            .then(res => res.json())
-            .then(res => {
-              this.loading = false
+            .then((res) => res.json())
+            .then((res) => {
+              this.loading = false;
               if (res.message) {
-                this.alert = { type: 'error', message: res.message }
-                return
+                this.alert = { type: "error", message: res.message };
+                return;
               }
 
-              this.url = res.link
+              this.url = res.link;
 
               $nextTick(() => {
-                $refs.url.select()
-                this.alert = { type: 'success', message: `链接 ${document.execCommand('Copy') ? '复制' : '生成'} ` }
-              })
+                $refs.url.select();
+                this.alert = {
+                  type: "success",
+                  message: `链接 ${
+                    document.execCommand("Copy") ? "复制" : "生成"
+                  } `,
+                };
+              });
             })
-            .catch(e => {
-              this.alert = { type: 'error', message: e.message }
-              this.loading = false
-            })
-        }
-      }
+            .catch((e) => {
+              this.alert = { type: "error", message: e.message };
+              this.loading = false;
+            });
+        },
+      };
     </script>
   </body>
 </html>

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS links (
   `status` int,
   `create_time` DATE
 );
+
 DROP TABLE IF EXISTS logs;
 CREATE TABLE IF NOT EXISTS logs (
   `id` integer PRIMARY KEY NOT NULL,
@@ -18,5 +19,3 @@ CREATE TABLE IF NOT EXISTS logs (
   `ip` text ,
   `create_time` DATE
 );
-
-
